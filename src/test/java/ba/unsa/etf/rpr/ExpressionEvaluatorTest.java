@@ -43,6 +43,7 @@ public class ExpressionEvaluatorTest {
         assertEquals(101, evaluator.evaluate("( sqrt ( 1 ) + ( ( 2 + 3 ) * ( 4 * 5 ) ) )"));
         assertEquals(101, evaluator.evaluate("( ( ( 2 + 3 ) * ( 4 * 5 ) ) + sqrt ( 1 ) )"));
         assertEquals(4, evaluator.evaluate("( 2 + sqrt ( sqrt ( ( 32 / 2 ) ) ) )"));
+        assertEquals(1, evaluator.evaluate("( sqrt ( -2 / -2 ) )"));
     }
     @Test
     void evaluateSqrtExceptionTest(){
@@ -61,12 +62,15 @@ public class ExpressionEvaluatorTest {
     @Test
     void evaluateValidityDoubleSignTest(){
         ExpressionEvaluator evaluator = new ExpressionEvaluator();
-        assertThrows(RuntimeException.class, () -> {evaluator.evaluate("( 4 + ( 1 + 2 ) ) )");});
-        assertThrows(RuntimeException.class, () -> {evaluator.evaluate("( 4 + 1 + 2 )");});
-        assertThrows(RuntimeException.class, () -> {evaluator.evaluate("( 4 * 1 + 2 )");});
-        assertThrows(RuntimeException.class, () -> {evaluator.evaluate("( 4 + ( 1 + + 2 ) )");});
-        assertThrows(RuntimeException.class, () -> {evaluator.evaluate("( 4 + ( 1 + 2 2 ) )");});
-        assertThrows(RuntimeException.class, () -> {evaluator.evaluate("( ( 4 + ( 1 + 2 ) )");});
+        assertAll(
+                ()->assertThrows(RuntimeException.class, () -> {evaluator.evaluate("( 4 + ( 1 + 2 ) ) )");}),
+                ()->assertThrows(RuntimeException.class, () -> {evaluator.evaluate("( 4 + 1 + 2 )");}),
+                ()->assertThrows(RuntimeException.class, () -> {evaluator.evaluate("( 4 * 1 + 2 )");}),
+                ()->assertThrows(RuntimeException.class, () -> {evaluator.evaluate("( 4 + ( 1 + + 2 ) )");}),
+                ()->assertThrows(RuntimeException.class, () -> {evaluator.evaluate("( 4 + ( 1 + 2 2 ) )");}),
+                ()->assertThrows(RuntimeException.class, () -> {evaluator.evaluate("( ( 4 + ( 1 + 2 ) )");}),
+                ()->assertThrows(RuntimeException.class, () -> {evaluator.evaluate("( 4 * 5 + ( sqrt ( ( 32 / 2 ) ) ) )");})
+        );
     }
     @Test
     void evaluateValidityEmptyStackTest(){

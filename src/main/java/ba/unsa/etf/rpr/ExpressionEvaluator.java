@@ -19,17 +19,20 @@ public class ExpressionEvaluator {
         Stack<Double> vals = new Stack<Double>(); //stack of values
         boolean value = false; //keeps information about previous element, whether it was a number
         boolean operator = false; //keeps information about previous element, whether it was an operator
+        boolean sqrtOp = false; //keeps information about unary operator
         int parentheses = 0; //number of parentheses, every open parentheses needs to be closed, if on open parentheses is increased, and on closed decreased in the end it needs to be zero
         try{
         for(String s: expression.split(" ")) {
             if (s.equals("(")) {
                 parentheses = parentheses + 1; //according to above-mentioned
                 operator = false; //after an operator either follows an open parentheses or a value and a closed parantheses, if that condition is satisfied value operator can go back to false
+                sqrtOp = false; //condition that sqrt needs to be followed by open parentheses
             }
             else if (s.equals(")")) { //mathematical operations are conducted on closed parentheses
                 parentheses = parentheses - 1;  //keeping track of parentheses, them being correctly opened and closed
                 String op = ops.pop(); //taking the last added operator from stack
                 operator = false;
+                if(sqrtOp) throw new RuntimeException("Invalid input."); //unary operator needs to be followed by an open parentheses
                 double val = vals.pop(); //taking the last value from stack
                 //depending on the operator op different operations are calculated
                 switch (op) {
@@ -55,12 +58,14 @@ public class ExpressionEvaluator {
                         break;
                 }
                 vals.push(val); //add result of operation back to stack
+                sqrtOp = false;
             } else if (s.equals("+") || s.equals("-") || s.equals("*") || s.equals("/") || s.toLowerCase().equals("sqrt")) {
                 //if there are consecutive operators with no parentheses between them, it does not include any of the binary operators when one of the operands is result of unary operator sqrt
                 if( operator && s.toLowerCase().equals("sqrt") == false ) throw new RuntimeException("Invalid input");
                 operator = true;
                 value = false;
                 ops.push(s);
+                if(s.equals("sqrt")) sqrtOp = true;
             } else {
                 //if there are two consecutive numbers with no operator between them
                 if(value) throw new RuntimeException("Invalid input.");

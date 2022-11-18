@@ -85,6 +85,7 @@ public class ExpressionEvaluatorTest {
     void evaluateSqrtExceptionTest(){
         ExpressionEvaluator evaluator = new ExpressionEvaluator();
         assertThrows(RuntimeException.class, () -> {evaluator.evaluate("( sqrt ( -1 ) + ( ( 2 + 3 ) * ( 4 * 5 ) ) )");});
+        assertThrows(RuntimeException.class, () -> {evaluator.evaluate("( sqrt 4 )");});
     }
     /**
      * Test 9

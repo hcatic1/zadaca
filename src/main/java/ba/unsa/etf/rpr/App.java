@@ -1,5 +1,9 @@
 package ba.unsa.etf.rpr;
-
+/**
+ * Main class for application that takes arguments from command prompt and evaluates the expression if valid
+ * @author Hana Catic
+ * @version 1.0
+ * */
 public class App{
     /**
      * Main method takes arguments from command prompt, argument needs to be forwarded in double quotation marks otherwise

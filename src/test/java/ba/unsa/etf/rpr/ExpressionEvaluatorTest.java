@@ -25,7 +25,7 @@ public class ExpressionEvaluatorTest {
     @Test
     void evaluateMinusTest(){
         ExpressionEvaluator evaluator = new ExpressionEvaluator();
-        assertEquals(1 , evaluator.evaluate("( sqrt ( 5 - 4 ) )"));
+        assertEquals(1 , evaluator.evaluate("( sqrt ( ( 5 - 4 ) ) )"));
     }
     /**
      * Test 3
@@ -75,7 +75,6 @@ public class ExpressionEvaluatorTest {
         assertEquals(101, evaluator.evaluate("( sqrt ( 1 ) + ( ( 2 + 3 ) * ( 4 * 5 ) ) )"));
         assertEquals(101, evaluator.evaluate("( ( ( 2 + 3 ) * ( 4 * 5 ) ) + sqrt ( 1 ) )"));
         assertEquals(4, evaluator.evaluate("( 2 + sqrt ( sqrt ( ( 32 / 2 ) ) ) )"));
-        assertEquals(1, evaluator.evaluate("( sqrt ( -2 / -2 ) )"));
     }
     /**
      * Test 8
@@ -84,6 +83,7 @@ public class ExpressionEvaluatorTest {
     @Test
     void evaluateSqrtExceptionTest(){
         ExpressionEvaluator evaluator = new ExpressionEvaluator();
+        assertThrows(RuntimeException.class, () -> {evaluator.evaluate("( sqrt ( -2 / -2 ) )");});
         assertThrows(RuntimeException.class, () -> {evaluator.evaluate("( sqrt ( -1 ) + ( ( 2 + 3 ) * ( 4 * 5 ) ) )");});
         assertThrows(RuntimeException.class, () -> {evaluator.evaluate("( sqrt 4 )");});
     }
@@ -127,4 +127,5 @@ public class ExpressionEvaluatorTest {
         assertThrows(RuntimeException.class, () -> {evaluator.evaluate("( 1 + )"); });
         assertThrows(RuntimeException.class, () -> {evaluator.evaluate("( 1 1 )"); });
     }
+
 }

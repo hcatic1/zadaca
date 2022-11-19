@@ -21,6 +21,7 @@ public class ExpressionEvaluator {
         boolean operator = false; //keeps information about previous element, whether it was an operator
         boolean sqrtOp = false; //keeps information about unary operator
         int parentheses = 0; //number of parentheses, every open parentheses needs to be closed, if on open parentheses is increased, and on closed decreased in the end it needs to be zero
+        String lastOp = "";
         try{
         for(String s: expression.split(" ")) {
             if (s.equals("(")) {
@@ -52,12 +53,13 @@ public class ExpressionEvaluator {
                         break;
                     case "sqrt":
                         //square root of a negative number does not have a solution in the set of real numbers
-                        if (val < 0)
+                        if (val < 0 || parentheses == 0)
                             throw new RuntimeException("Invalid input!");
                         val = Math.sqrt(val);
                         break;
                 }
                 vals.push(val); //add result of operation back to stack
+                lastOp = op;
                 sqrtOp = false;
             } else if (s.equals("+") || s.equals("-") || s.equals("*") || s.equals("/") || s.toLowerCase().equals("sqrt")) {
                 //if there are consecutive operators with no parentheses between them, it does not include any of the binary operators when one of the operands is result of unary operator sqrt
@@ -80,7 +82,8 @@ public class ExpressionEvaluator {
         }
         //if there are more parentheses than operands emptyStackException will be thrown, catch it and throw runTimeException
         }catch(EmptyStackException e){
-            throw new RuntimeException("Invalid input.");
+            if(lastOp.equals("sqrt") == false)
+                throw new RuntimeException("Invalid input.");
         }
         Double results = vals.pop();
         //after taking out the result, if the stack is not empty it means that there were more operands than parentheses, or if all opened parentheses were not closed or all closed were not opened
